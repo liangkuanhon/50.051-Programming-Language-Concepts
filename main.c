@@ -59,6 +59,11 @@ int main(void) {
 
     if (solve_maze(&grid) == 0) {
         printf("Maze solved.\n");
+        if (write_solved_txt(&grid, "maze_solved.txt") == 0) {
+            printf("Solution written to maze_solved.txt\n");
+        } else {
+            printf("Failed to write maze_solved.txt\n");
+        }
     } else {
         printf("No solution found.\n");
     }

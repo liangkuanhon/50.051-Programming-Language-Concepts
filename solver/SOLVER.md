@@ -18,7 +18,7 @@ The solver finds the shortest path through a generated maze using **Breadth-Firs
 | `solver/queue.h` | Queue interface |
 | `solver/queue.c` | Queue implementation (circular buffer) |
 | `solver/bfs.h` | BFS solver interface |
-| `solver/bfs.c` | BFS solver implementation |
+| `solver/bfs.c` | BFS solver implementation + text file writer |
 
 ---
 
@@ -205,6 +205,54 @@ where W = `grid->width` and H = `grid->height`.
 
 ---
 
+## Text Output: `maze_solved.txt`
+
+After `solve_maze()` populates `grid->visited`, `write_solved_txt()` expands the logical grid into a `(2W+1) × (2H+1)` character map and writes it to a file.
+
+### Character Encoding
+
+| Character | Meaning |
+|-----------|---------|
+| `#` | Wall |
+| `.` | Solution path (cell or passage connecting two path cells) |
+| ` ` | Open corridor not on the solution path |
+
+### Expansion Rules
+
+Each logical cell `(cx, cy)` maps to text position `(2*cy+1, 2*cx+1)`. Passage positions between adjacent cells are derived from the bitmask:
+
+- **Right passage** at `(2*cy+1, 2*cx+2)` — open if `cells[cy][cx] & RIGHT`; rendered as `.` only if both `(cx, cy)` and `(cx+1, cy)` are on the path
+- **Down passage** at `(2*cy+2, 2*cx+1)` — open if `cells[cy][cx] & DOWN`; rendered as `.` only if both `(cx, cy)` and `(cx, cy+1)` are on the path
+
+### Example Output
+
+The following is produced for a 10×5 maze with `seed=42`:
+
+```
+#####################
+#.#      ...#       #
+#.#######.#.##### ###
+#.........#.#...#   #
+###########.#.#.### #
+#         #.#.#.#   #
+# ##### # #.#.#.# ###
+#   # # # #...#.#   #
+### # # #######.### #
+#     #        .....#
+#####################
+```
+
+The `.` trail runs continuously from `(0,0)` (top-left) to `(9,4)` (bottom-right).
+
+### Return Values
+
+| Value | Meaning |
+|-------|---------|
+| `0`  | File written successfully |
+| `-1` | File could not be opened |
+
+---
+
 ## Integration with `main.c`
 
 ```c
@@ -212,6 +260,11 @@ generate_maze(&grid, config.seed);
 
 if (solve_maze(&grid) == 0) {
     printf("Maze solved.\n");
+    if (write_solved_txt(&grid, "maze_solved.txt") == 0) {
+        printf("Solution written to maze_solved.txt\n");
+    } else {
+        printf("Failed to write maze_solved.txt\n");
+    }
 } else {
     printf("No solution found.\n");
 }
@@ -222,5 +275,5 @@ if (solve_maze(&grid) == 0) {
 The solver sits between the generator and the renderer in the pipeline:
 
 ```
-Config → Parser → Grid alloc → generate_maze() → solve_maze() → render_maze()
+Config → Parser → Grid alloc → generate_maze() → solve_maze() → write_solved_txt() → render_maze()
 ```
