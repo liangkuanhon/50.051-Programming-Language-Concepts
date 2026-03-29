@@ -23,4 +23,20 @@
  */
 int solve_maze(Grid *grid);
 
+/*
+ * write_solved_txt: write the solved maze to a plain-text file.
+ *
+ * The maze is expanded to a (2*width+1) x (2*height+1) character grid:
+ *   '#' -> wall
+ *   '.' -> solution path (cell or passage between two path cells)
+ *   ' ' -> open corridor not on the solution path
+ *
+ * Must be called after solve_maze() so that grid->visited is populated.
+ *
+ * Returns:
+ *   0  -> file written successfully
+ *  -1  -> file could not be opened
+ */
+int write_solved_txt(Grid *grid, const char *filename);
+
 #endif
