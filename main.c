@@ -4,17 +4,12 @@
 #include "grid.h"
 #include "maze/generator.h"
 #include "solver/bfs.h"
+#include "render/bmp.h"
 
 /*
  * Debug maze visualization with # and . — uncomment body to use.
  * void print_mono_maze(Grid *grid) { ... }
  */
-
-/* STUB (temporary) — remove when renderer is implemented */
-void render_maze(const char *filename, Grid *grid) {
-    printf("[STUB] render_maze called -> %s\n", filename);
-    (void)grid;
-}
 
 /* allocate 2D array */
 int **alloc_2d(int rows, int cols) {
@@ -64,11 +59,16 @@ int main(void) {
         } else {
             printf("Failed to write maze_solved.txt\n");
         }
+
+        if(render_maze_bmp("maze_solution.bmp", &grid, config.show_visited) == 0) {
+            printf("Maze rendered to maze_solution.bmp\n");
+        } else {
+            printf("Failed to render maze_solution.bmp\n");
+        }
+
     } else {
         printf("No solution found.\n");
     }
-
-    /* render_maze("output.bmp", &grid); */
 
     free_2d(grid.cells,   grid.height);
     free_2d(grid.visited, grid.height);

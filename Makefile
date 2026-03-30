@@ -27,8 +27,8 @@ bfs.o: solver/bfs.c solver/bfs.h solver/queue.h grid.h
 queue.o: solver/queue.c solver/queue.h
 	$(CC) $(CFLAGS) -c solver/queue.c -o queue.o
 
-# bmp.o: render/bmp.c render/bmp.h grid.h
-# 	$(CC) $(CFLAGS) -c render/bmp.c -o bmp.o
+bmp.o: render/bmp.c render/bmp.h grid.h
+	$(CC) $(CFLAGS) -c render/bmp.c -o bmp.o
 
 clean:
 	rm -f *.o maze_solver
