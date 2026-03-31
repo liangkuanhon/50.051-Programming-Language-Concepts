@@ -17,6 +17,8 @@
 #define TILE_OPEN 1
 #define TILE_VISITED 2 
 #define TILE_PATH 3
+#define TILE_START 4
+#define TILE_END 5
 
 /* Simple RGB pixel type */
 typedef struct {
@@ -79,6 +81,7 @@ static void free_int_grid(int **arr, int rows){
  * OPEN -> white
  * VISITED -> light blue
  * PATH -> red
+ * START & END INDICATOR -> green
  */
 
 static Pixel tile_to_color(int tile){
@@ -96,6 +99,10 @@ static Pixel tile_to_color(int tile){
             break;
         case TILE_PATH:
             p.r = 255; p.g = 0; p.b = 0;
+            break;
+        case TILE_START:
+        case TILE_END:
+            p.r = 0; p.g = 255; p.b = 0;
             break;
         default:
             p.r = 255; p.g = 0; p.b = 255;
@@ -117,7 +124,10 @@ static int **build_tile_map(Grid *grid, int show_visited, int *out_rows, int *ou
         return NULL;
     }
 
-    for (cy=0; cy<grid->height;cy++){
+    tiles[1][0] = TILE_START;
+    tiles[rows - 2][cols - 1] = TILE_END;
+
+    for (cy = 0; cy < grid->height; cy++){
         for (cx = 0; cx < grid->width; cx++){
             int ty, tx;
             int state;
