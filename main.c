@@ -6,11 +6,6 @@
 #include "solver/bfs.h"
 #include "render/bmp.h"
 
-/*
- * Debug maze visualization with # and . — uncomment body to use.
- * void print_mono_maze(Grid *grid) { ... }
- */
-
 /* allocate 2D array */
 int **alloc_2d(int rows, int cols) {
     int i;
