@@ -4,7 +4,8 @@ CFLAGS = -ansi -pedantic -Wall -Werror
 OBJ = main.o \
       parser.o \
       generator.o stack.o \
-      bfs.o queue.o
+      bfs.o queue.o \
+	  bmp.o
 
 maze_solver: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o maze_solver
@@ -31,4 +32,7 @@ bmp.o: render/bmp.c render/bmp.h grid.h
 	$(CC) $(CFLAGS) -c render/bmp.c -o bmp.o
 
 clean:
-	rm -f *.o maze_solver
+	rm -f *.o render/*.o maze/*.o solver/*.o config/*.o maze_solver
+
+run: maze_solver
+	./maze_solver config.ini

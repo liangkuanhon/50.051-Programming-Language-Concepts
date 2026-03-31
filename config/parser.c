@@ -208,15 +208,29 @@ int parse_config(const char *filename, Config *config) {
         return -3;
     }
 
-    if (config->width <= 0) {
-        fprintf(stderr, "Error: width must be > 0\n");
+    /* 1. Ensure dimensions are at least 3 (minimum possible maze with walls) */
+    if (config->width < 5 || config->height < 5) {
+        fprintf(stderr, "Error: dimensions must be at least 5x5 a viable maze.\n");
         return -2;
     }
 
-    if (config->height <= 0) {
-        fprintf(stderr, "Error: height must be > 0\n");
-        return -2;
+    /* 2. Input Sanitisation
+    Enforcing ODD numbers for the physical grid */
+    if (config->width % 2 == 0) {
+        fprintf(stderr, "Warning: width must be odd. Adjusting %d to %d.\n", config->width, config->width + 1);
+        config->width++;
     }
+
+    if (config->height % 2 == 0) {
+        fprintf(stderr, "Warning: height must be odd. Adjusting %d to %d.\n", config->height, config->height + 1);
+        config->height++;
+    }
+
+    /* 3. Translate Physical Input to Logical Grid for the Generator
+       Example: Input 5 becomes Logical 2.
+       Formula: (Physical - 1) / 2 */
+    config->width = (config->width - 1) / 2;
+    config->height = (config->height - 1) / 2;
 
     return 0;
 }

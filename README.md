@@ -131,7 +131,7 @@ render/bmp.c \
 ## ▶️ Usage
 
 ```bash
-./maze_solver config.ini
+make run
 ```
 
 ---
