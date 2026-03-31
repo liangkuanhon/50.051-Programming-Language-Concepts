@@ -2,4 +2,7 @@
 *.exe
 *.swp
 *.vscode/
+*.bmp
+*.txt
+maze_solver
 config.ini
