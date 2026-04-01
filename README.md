@@ -4,11 +4,13 @@
 
 ## 📌 Overview
 
-This project implements a complete pipeline for:
+This project is a high-performance, modular maze pipeline built entirely in ANSI C. It translates user-defined configurations into complex geometric structures, solves them using various pathfinding strategies, and renders the result as a bit-mapped image.
 
-1. Parsing a configuration file (INI format)
-2. Generating a maze using an iterative algorithm
-3. Solving the maze using BFS
+It implements a complete pipeline for:
+
+1. Parsing a configuration file (INI format) or CLI input
+2. Generating a maze using Prim's algorithm or Recursive Backtracker
+3. Solving the maze using BFS/DFS
 4. Rendering the result as a BMP image
 
 The system is modular, with each component designed and implemented independently, then integrated through a shared data structure.
@@ -18,15 +20,24 @@ The system is modular, with each component designed and implemented independentl
 ## 🧠 Architecture
 
 ```
-config.ini → Parser → Config struct
-                          ↓
-                   Maze Generator
-                          ↓
-                     BFS Solver
-                          ↓
-                    BMP Renderer
-                          ↓
-                     output.bmp
+[config.ini] ──┐
+               ├─► [FSM Parser] ──┐
+[CLI Args] ────┘                  │
+                                  ▼
+                          [Config Struct]
+                                  │
+          ┌───────────────────────┴───────────────────────┐
+          ▼                                               ▼
+ [Generator Factory]                             [Solver Factory]
+ (Recursive Backtracker)                                (BFS)
+ (Prim's Algorithm)                                     (DFS)
+          │                                               │
+          └───────────────────────┬───────────────────────┘
+                                  ▼
+                          [BMP Render Engine]
+                                  │
+                                  ▼
+                             output.bmp
 ```
 
 ---
@@ -81,7 +92,7 @@ project/
 
 ### 🔹 Maze Generator (Magnus Yunus)
 
-- Implements iterative Recursive Backtracker algorithm
+- Implements iterative Recursive Backtracker and Prim's Algorithm
 - Uses a custom stack for traversal
 - Generates a valid maze inside the grid
 
@@ -89,7 +100,7 @@ project/
 
 ### 🔹 BFS Solver (Matthew Phua)
 
-- Solves the maze using Breadth-First Search
+- Solves the maze using Breadth-First Search and Depth-First Search
 - Uses a custom queue
 - Tracks visited cells and reconstructs the solution path
 
@@ -130,8 +141,40 @@ render/bmp.c \
 
 ## ▶️ Usage
 
+### 1. Basic execution
+
+Run the engine using values defined in `config.ini`.
+
 ```bash
 make run
+```
+
+---
+
+### 2. Advanced overrides via CLI
+
+CLI flags are parsed _after_ `config.ini` and take precedence in the final config struct.
+
+**Override width only**
+
+```bash
+make run ARGS="--width 41"
+```
+
+**Full suite override**
+
+```bash
+make run ARGS="--width 41 --height 41 --seed 12345 --algo prim --solver dfs"
+```
+
+---
+
+### 3. Direct binary execution
+
+Invoke the binary manually, bypassing the `make` wrapper — useful for quick tests.
+
+```bash
+./maze_solver config.ini --width 25 --height 25 --algo prim
 ```
 
 ---
@@ -143,9 +186,11 @@ make run
 width=20
 height=15
 seed=42
+algorithm=prim    ; Options: backtracker, prim
 
 [solver]
-show_visited=1
+show_visited=1    ; Highlight pathfinding progress
+algorithm=bfs     ; Options: bfs, dfs
 ```
 
 ---

@@ -35,4 +35,4 @@ clean:
 	rm -f *.o render/*.o maze/*.o solver/*.o config/*.o maze_solver
 
 run: maze_solver
-	./maze_solver config.ini
+	./maze_solver config.ini $(ARGS)
