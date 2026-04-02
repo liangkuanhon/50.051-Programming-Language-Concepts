@@ -3,6 +3,6 @@
 
 #include "../grid.h"
 
-void generate_maze(Grid *grid, int seed);
+void generate_maze(Grid *grid, int seed, const char *algorithm);
 
 #endif

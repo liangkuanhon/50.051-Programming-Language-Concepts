@@ -12,8 +12,8 @@ static void print_usage(const char *prog) {
     fprintf(stderr, "  --width  <n>       Override maze width\n");
     fprintf(stderr, "  --height <n>       Override maze height\n");
     fprintf(stderr, "  --seed   <n>       Override random seed\n");
-    fprintf(stderr, "  --algo   <name>    Override maze algorithm (backtracker|prim|kruskal|wilson)\n");
-    fprintf(stderr, "  --solver <name>    Override solver algorithm (bfs|dfs|astar|dijkstra)\n");
+    fprintf(stderr, "  --algo   <name>    Override maze algorithm (backtracker|prim)\n");
+    fprintf(stderr, "  --solver <name>    Override solver algorithm (bfs|dfs)\n");
     fprintf(stderr, "  --show-visited     Override show_visited to 1\n");
 }
 
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     grid.cells   = alloc_2d(grid.height, grid.width);
     grid.visited = alloc_2d(grid.height, grid.width);
 
-    generate_maze(&grid, config.seed);
+    generate_maze(&grid, config.seed, config.maze_algorithm);
 
     printf("Config: width=%d height=%d maze_algo=%s solver_algo=%s show_visited=%d\n",
            stored_width, stored_height,
