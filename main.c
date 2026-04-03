@@ -5,6 +5,7 @@
 #include "grid.h"
 #include "maze/generator.h"
 #include "solver/bfs.h"
+#include "solver/dfs.h"
 #include "render/bmp.h"
 
 /* --- Usage --- */
@@ -101,6 +102,7 @@ int main(int argc, char *argv[]) {
     Grid grid;
     int stored_height, stored_width;
     int valid;
+    int solved;
 
     if (argc < 2) {
         print_usage(argv[0]);
@@ -144,7 +146,18 @@ int main(int argc, char *argv[]) {
            config.maze_algorithm, config.solver_algorithm,
            config.show_visited);
 
-    if (solve_maze(&grid) == 0) {
+    if (strcmp(config.solver_algorithm, "bfs") == 0) {
+        solved = solve_maze(&grid);
+    } else if (strcmp(config.solver_algorithm, "dfs") == 0) {
+        solved = solve_maze_dfs(&grid);
+    } else {
+        fprintf(stderr, "Error: unknown solver '%s'\n", config.solver_algorithm);
+        free_2d(grid.cells,   grid.height);
+        free_2d(grid.visited, grid.height);
+        return 1;
+    }
+
+    if (solved == 0) {
         printf("Maze solved.\n");
         if (write_solved_txt(&grid, "maze_solved.txt") == 0) {
             printf("Solution written to maze_solved.txt\n");
@@ -152,7 +165,7 @@ int main(int argc, char *argv[]) {
             printf("Failed to write maze_solved.txt\n");
         }
 
-        if(render_maze_bmp("maze_solution.bmp", &grid, config.show_visited) == 0) {
+        if (render_maze_bmp("maze_solution.bmp", &grid, config.show_visited) == 0) {
             printf("Maze rendered to maze_solution.bmp\n");
         } else {
             printf("Failed to render maze_solution.bmp\n");

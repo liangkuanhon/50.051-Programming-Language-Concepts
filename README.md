@@ -64,6 +64,8 @@ project/
 ├── solver/
 │   ├── bfs.c
 │   ├── bfs.h
+│   ├── dfs.c
+│   ├── dfs.h
 │   ├── queue.c
 │   ├── queue.h
 │
@@ -98,11 +100,12 @@ project/
 
 ---
 
-### 🔹 BFS Solver (Matthew Phua)
+### 🔹 BFS & DFS Solver (Matthew Phua)
 
-- Solves the maze using Breadth-First Search and Depth-First Search
-- Uses a custom queue
+- Solves the maze using Breadth-First Search (BFS) or Depth-First Search (DFS)
+- BFS uses a custom queue; DFS reuses the existing stack from the maze generator
 - Tracks visited cells and reconstructs the solution path
+- Writes solution to `maze_solved.txt`
 
 ---
 
@@ -132,7 +135,7 @@ Or manually:
 gcc -Wall -Wextra -std=c11 main.c \
 config/parser.c \
 maze/generator.c maze/stack.c \
-solver/bfs.c solver/queue.c \
+solver/bfs.c solver/queue.c solver/dfs.c \
 render/bmp.c \
 -o maze_solver
 ```
@@ -215,7 +218,7 @@ typedef struct {
 1. Parse configuration file
 2. Initialize grid memory
 3. Generate maze
-4. Solve maze using BFS
+4. Solve maze using BFS or DFS (selected via config)
 5. Render output to BMP file
 
 ---
@@ -225,8 +228,8 @@ typedef struct {
 - Modular design: each component must be independent
 - No global state shared across modules (except via `Grid`)
 - Custom data structures required:
-  - Stack (for generator)
-  - Queue (for BFS)
+  - Stack (for generator and DFS solver)
+  - Queue (for BFS solver)
 
 - No external libraries beyond standard C
 

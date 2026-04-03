@@ -4,13 +4,13 @@ CFLAGS = -ansi -pedantic -Wall -Werror
 OBJ = main.o \
       parser.o \
       generator.o stack.o \
-      bfs.o queue.o \
+      bfs.o queue.o dfs.o \
 	  bmp.o
 
 maze_solver: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o maze_solver
 
-main.o: main.c config/parser.h grid.h maze/generator.h solver/bfs.h
+main.o: main.c config/parser.h grid.h maze/generator.h solver/bfs.h solver/dfs.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
 parser.o: config/parser.c config/parser.h
@@ -27,6 +27,9 @@ bfs.o: solver/bfs.c solver/bfs.h solver/queue.h grid.h
 
 queue.o: solver/queue.c solver/queue.h
 	$(CC) $(CFLAGS) -c solver/queue.c -o queue.o
+
+dfs.o: solver/dfs.c solver/dfs.h grid.h maze/stack.h
+	$(CC) $(CFLAGS) -c solver/dfs.c -o dfs.o
 
 bmp.o: render/bmp.c render/bmp.h grid.h
 	$(CC) $(CFLAGS) -c render/bmp.c -o bmp.o
