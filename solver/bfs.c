@@ -161,6 +161,14 @@ int write_solved_txt(Grid *grid, const char *filename) {
         }
     }
 
+    /* Open entrance and exit */
+    text[1][1] = '.';
+    text[2 * grid->height - 1][2 * grid->width - 1] = '.';
+    
+    /* Mark entrance and exit */
+    text[1][0] = 'S';
+    text[2 * grid->height - 1][2 * grid->width] = 'E';
+
     /* Write to file */
     fp = fopen(filename, "w");
     if (!fp) {
