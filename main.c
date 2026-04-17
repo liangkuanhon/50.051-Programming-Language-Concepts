@@ -165,10 +165,10 @@ int main(int argc, char *argv[]) {
             printf("Failed to write maze_solved.txt\n");
         }
 
-        if (render_maze_bmp("maze_solution.bmp", &grid, config.show_visited) == 0) {
-            printf("Maze rendered to maze_solution.bmp\n");
+        if (render_maze_bmp("output.bmp", &grid, config.show_visited) == 0) {
+            printf("Maze rendered to output.bmp\n");
         } else {
-            printf("Failed to render maze_solution.bmp\n");
+            printf("Failed to render output.bmp\n");
         }
 
     } else {
